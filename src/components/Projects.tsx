@@ -1,927 +1,150 @@
-import { useState } from 'react';
-import { Github, ExternalLink, Star, Image } from 'lucide-react';
-import ScreenshotsModal from './ScreenshotsModal';
+import { ArrowUpRight, Github, Images } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { projects, type Project, type ProjectStatus } from '../data/portfolio';
+import FilterTabs from './ui/FilterTabs';
+import Lightbox from './ui/Lightbox';
+import SectionHeader from './ui/SectionHeader';
 
-type Project = {
-  id: string;
-  title: string;
-  description: string;
-  image_url: string;
-  github_url: string;
-  live_url: string;
-  technologies: string[];
-  status: 'Past' | 'Present' | 'Upcoming';
-  featured: boolean;
-  order_index: number;
-  created_at: string;
+const statusLabel: Record<ProjectStatus, string> = {
+  Present: 'Active',
+  Past: 'Delivered',
+  Upcoming: 'In development',
 };
 
-type ProjectScreenshot = {
-  id: string;
-  project_id: string;
-  image_url: string;
-  order_index: number;
-  created_at: string;
+const statusDot: Record<ProjectStatus, string> = {
+  Present: 'bg-spring-bright',
+  Past: 'bg-white/60',
+  Upcoming: 'bg-amber',
 };
 
-const projectScreenshots: ProjectScreenshot[] = [
-  {
-    id: '1',
-    project_id: '1',
-    image_url: '/projects/ASPI/1.png',
-    order_index: 1,
-    created_at: '',
-  },
-  {
-    id: '2',
-    project_id: '1',
-    image_url: '/projects/ASPI/2.png',
-    order_index: 2,
-    created_at: '',
-  },
-  {
-    id: '3',
-    project_id: '1',
-    image_url: '/projects/ASPI/3.png',
-    order_index: 3,
-    created_at: '',
-  },
-  {
-    id: '4',
-    project_id: '1',
-    image_url: '/projects/ASPI/4.png',
-    order_index: 3,
-    created_at: '',
-  },
-  {
-    id: '5',
-    project_id: '1',
-    image_url: '/projects/ASPI/5.png',
-    order_index: 1,
-    created_at: '',
-  },
-  {
-    id: '6',
-    project_id: '1',
-    image_url: '/projects/ASPI/6.png',
-    order_index: 1,
-    created_at: '',
-  },
-  // KIT POS Screenshots
-  {
-    id: '7',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/1.png',
-    order_index: 1,
-    created_at: '',
-  },
-  {
-    id: '8',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/2.png',
-    order_index: 2,
-    created_at: '',
-  },
-  {
-    id: '9',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/3.png',
-    order_index: 3,
-    created_at: '',
-  },
-  {
-    id: '10',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/4.png',
-    order_index: 4,
-    created_at: '',
-  },
-  {
-    id: '11',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/5.png',
-    order_index: 5,
-    created_at: '',
-  },
-  {
-    id: '12',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/6.png', 
-    order_index: 6,
-    created_at: '',
-  },
-  {
-    id: '13',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/7.png',
-    order_index: 7,
-    created_at: '',
-  },
-  {
-    id: '14',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/8.png',
-    order_index: 8,
-    created_at: '',
-  },
-  {
-    id: '15',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/9.png',
-    order_index: 9,
-    created_at: '',
-  },
-  {
-    id: '16',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/10.png',
-    order_index: 10,
-    created_at: '',
-  },
-  {
-    id: '17',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/11.png', 
-    order_index: 11,
-    created_at: '',
-  }, 
-  {
-    id: '18',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/12.png', 
-    order_index: 12,
-    created_at: '',
-  }, 
-  {
-    id: '19',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/13.png', 
-    order_index: 13,
-    created_at: '',
-  }, 
-  {
-    id: '20',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/14.png', 
-    order_index: 14,
-    created_at: '',
-  }, 
-  {
-    id: '21',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/15.png', 
-    order_index: 15,
-    created_at: '',
-  }, 
-  {
-    id: '22',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/16.png', 
-    order_index: 16,
-    created_at: '',
-  }, 
-  {
-    id: '23',
-    project_id: '2',
-    image_url: '/projects/KIT-POS/17.png', 
-    order_index: 17,
-    created_at: '',
-  }, 
-
-  // TaskNest Screenshots
-  {
-    id: '55',
-    project_id: '3',
-    image_url: '/projects/TASKNEST/1.png',
-    order_index: 1,
-    created_at: '',
-  },
-
-
-  // AJU-ERP Screenshots
-  // Generate order index upto 5
-  {
-    id: '24',
-    project_id: '8',
-    image_url: '/projects/AJU-ERP/1.png',
-    order_index: 1,
-    created_at: '',
-  },
-  {
-    id: '25',
-    project_id: '8',
-    image_url: '/projects/AJU-ERP/2.png',
-    order_index: 2,
-    created_at: '',
-  },
-  {
-    id: '26',
-    project_id: '8',
-    image_url: '/projects/AJU-ERP/3.png',
-    order_index: 3,
-    created_at: '',
-  },
-  {
-    id: '27',
-    project_id: '8',
-    image_url: '/projects/AJU-ERP/4.png',
-    order_index: 4,
-    created_at: '',
-  },
-  {
-    id: '28',
-    project_id: '8',
-    image_url: '/projects/AJU-ERP/5.png',
-    order_index: 5,
-    created_at: '',
-  },
-  // NetCourier Screenshots
-  {
-    id: '29',
-    project_id: '7',
-    image_url: '/projects/NetCourier/1.png',
-    order_index: 1,
-    created_at: '',
-  },
-  {
-    id: '30',
-    project_id: '7',
-    image_url: '/projects/NetCourier/2.png',
-    order_index: 2,
-    created_at: '',
-  },
-  {
-    id: '31',
-    project_id: '7',
-    image_url: '/projects/NetCourier/3.png',
-    order_index: 3,
-    created_at: '',
-  },
-  {
-    id: '32',
-    project_id: '7',
-    image_url: '/projects/NetCourier/4.png',
-    order_index: 4,
-    created_at: '',
-  },
-  // Money Manager 10 screenshots
-  {
-    id: '33',
-    project_id: '4',
-    image_url: '/projects/MM/1.png',
-    order_index: 1,
-    created_at: '',
-  },
-  {
-    id: '34',
-    project_id: '4',
-    image_url: '/projects/MM/2.png',
-    order_index: 2,
-    created_at: '',
-  },
-  {
-    id: '35',
-    project_id: '4',
-    image_url: '/projects/MM/3.png',
-    order_index: 3,
-    created_at: '',
-  },
-  {
-    id: '36',
-    project_id: '4',
-    image_url: '/projects/MM/4.png',
-    order_index: 4,
-    created_at: '',
-  },
-  {
-    id: '37',
-    project_id: '4',
-    image_url: '/projects/MM/5.png',
-    order_index: 5,
-    created_at: '',
-  },
-  {
-    id: '38',
-    project_id: '4',
-    image_url: '/projects/MM/6.png',
-    order_index: 6,
-    created_at: '',
-  },
-  {
-    id: '39',
-    project_id: '4',
-    image_url: '/projects/MM/7.png',
-    order_index: 7,
-    created_at: '',
-  },
-  {
-    id: '40',
-    project_id: '4',
-    image_url: '/projects/MM/8.png',
-    order_index: 8,
-    created_at: '',
-  },
-  {
-    id: '41',
-    project_id: '4',
-    image_url: '/projects/MM/9.png',
-    order_index: 9,
-    created_at: '',
-  },
-  {
-    id: '42',
-    project_id: '4',
-    image_url: '/projects/MM/10.png',
-    order_index: 10,
-    created_at: '',
-  },
-  // Brihatta Art Foundation 6 screenshots
-  {
-    id: '43',
-    project_id: '5',
-    image_url: '/projects/Brihatta/1.png',
-    order_index: 1,
-    created_at: '',
-  },
-  {
-    id: '44',
-    project_id: '5',
-    image_url: '/projects/Brihatta/2.png',
-    order_index: 2,
-    created_at: '',
-  },
-  {
-    id: '45',
-    project_id: '5',
-    image_url: '/projects/Brihatta/3.png',
-    order_index: 3,
-    created_at: '',
-  },
-  {
-    id: '46',
-    project_id: '5',
-    image_url: '/projects/Brihatta/4.png',
-    order_index: 4,
-    created_at: '',
-  },
-  {
-    id: '47',
-    project_id: '5',
-    image_url: '/projects/Brihatta/5.png',
-    order_index: 5,
-    created_at: '',
-  },
-  {
-    id: '48',
-    project_id: '5',
-    image_url: '/projects/Brihatta/6.png',
-    order_index: 6,
-    created_at: '',
-  },
-  // Eldorado Holdings Ltd. 6 screenshots
-  {
-    id: '49',
-    project_id: '6',
-    image_url: '/projects/Eldorado/1.png',
-    order_index: 1,
-    created_at: '',
-  },
-  {
-    id: '50',
-    project_id: '6',
-    image_url: '/projects/Eldorado/2.png',
-    order_index: 2,
-    created_at: '',
-  },
-  {
-    id: '51',
-    project_id: '6',
-    image_url: '/projects/Eldorado/3.png',
-    order_index: 3,
-    created_at: '',
-  },
-  {
-    id: '52',
-    project_id: '6',
-    image_url: '/projects/Eldorado/4.png',
-    order_index: 4,
-    created_at: '',
-  },
-  {
-    id: '53',
-    project_id: '6',
-    image_url: '/projects/Eldorado/5.png',
-    order_index: 5,
-    created_at: '',
-  },
-  {
-    id: '54',
-    project_id: '6',
-    image_url: '/projects/Eldorado/6.png',
-    order_index: 6,
-    created_at: '',
-  },
-
-  // LIRA Screenshots
-  {
-    id: '56',
-    project_id: '9',
-    image_url: '/projects/LIRA/1.png',
-    order_index: 1,
-    created_at: '',
-  },
-  {
-    id: '57',
-    project_id: '9',
-    image_url: '/projects/LIRA/2.png',
-    order_index: 2,
-    created_at: '',
-  },
-
-  // Money Manager APP
-  {
-    id: '58',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/1.png',
-    order_index: 1,
-    created_at: '',
-  },
-  {
-    id: '59',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/2.png',
-    order_index: 2,
-    created_at: '',
-  },
-  {
-    id: '60',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/3.png',
-    order_index: 3,
-    created_at: '',
-  },
-  {
-    id: '61',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/4.png',
-    order_index: 4,
-    created_at: '',
-  },
-  {
-    id: '62',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/5.png',
-    order_index: 5,
-    created_at: '',
-  },
-  {
-    id: '63',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/6.png',
-    order_index: 6,
-    created_at: '',
-  },
-  {
-    id: '64',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/7.png',
-    order_index: 7,
-    created_at: '',
-  },
-  {
-    id: '65',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/8.png',
-    order_index: 8,
-    created_at: '',
-  },
-  {
-    id: '66',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/9.png',
-    order_index: 9,
-    created_at: '',
-  },
-  {
-    id: '67',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/10.png',
-    order_index: 10,
-    created_at: '',
-  },
-  
-  {
-    id: '68',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/11.png',
-    order_index: 11,
-    created_at: '',
-  },
-  
-  {
-    id: '69',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/12.png',
-    order_index: 12,
-    created_at: '',
-  },
-  {
-    id: '70',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/13.png',
-    order_index: 13,
-    created_at: '',
-  },
-  {
-    id: '71',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/14.png',
-    order_index: 14,
-    created_at: '',
-  },
-
-  // Bishwajit
-  {
-    id: '72',
-    project_id: '11',
-    image_url: '/projects/BISHWAJIT/1.png',
-    order_index: 1,
-    created_at: '',
-  }, 
-  {
-    id: '73',
-    project_id: '11',
-    image_url: '/projects/BISHWAJIT/2.png',
-    order_index: 2,
-    created_at: '',
-  }, 
-  {
-    id: '74',
-    project_id: '11',
-    image_url: '/projects/BISHWAJIT/3.png',
-    order_index: 3,
-    created_at: '',
-  }, 
-  {
-    id: '75',
-    project_id: '11',
-    image_url: '/projects/BISHWAJIT/4.png',
-    order_index: 4,
-    created_at: '',
-  }, 
-  {
-    id: '76',
-    project_id: '11',
-    image_url: '/projects/BISHWAJIT/5.png',
-    order_index: 5,
-    created_at: '',
-  }, 
-
-
-  // MONEY Manager APP rest
-   {
-    id: '77',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/15.png',
-    order_index: 15,
-    created_at: '',
-  },
-  {
-    id: '78',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/16.png',
-    order_index: 16,
-    created_at: '',
-  },
-  {
-    id: '79',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/17.png',
-    order_index: 17,
-    created_at: '',
-  },
-  {
-    id: '80',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/18.png',
-    order_index: 18,
-    created_at: '',
-  },
-  {
-    id: '81',
-    project_id: '10',
-    image_url: '/projects/MONEY-MANAGER-APP/19.png',
-    order_index: 19,
-    created_at: '',
-  },
-
-
-];
-
-const projects: Project[] = [
-  {
-    id: '1',
-    title: 'ASPI (Enterprise ERP System)',
-    description: 'Enterprise-grade ERP built on Spring Boot, seamlessly integrating procurement, inventory, sales, and financial operations for scalable business management.',
-    image_url: '/projects/ASPI/6.png',
-    github_url: '',
-    live_url: '',
-    technologies: ['Java', 'Spring Boot', 'MsSQL', 'jQuery', 'HTML', 'Bootstrap5', 'Crystal report'],
-    status: 'Present' as const,
-    featured: true,
-    order_index: 1,
-    created_at: '',
-  },
-  {
-    id: '2',
-    title: 'KIT POS (Point of Sale System)',
-    description: 'Comprehensive POS solution featuring inventory control, BOM, sales tracking, payments, and reporting, built with Spring Boot, JavaFX, MsSQL, and modern web UI.',
-    image_url: '/projects/KIT-POS/1.png',
-    github_url: '',
-    live_url: '',
-    technologies: ['Java', 'Spring Boot', 'JavaFX', 'MsSQL', 'jQuery', 'Bootstrap4', 'Crystal report'],
-    status: 'Past' as const,
-    featured: true,
-    order_index: 2,
-    created_at: '',
-  },
-  {
-    id: '3',
-    title: 'TaskNest',
-    description: 'Collaborative task management platform enabling teams to create workspaces, assign members, and manage tasks and events efficiently.',
-    image_url: '/projects/0.png',
-    github_url: '',
-    live_url: '',
-    technologies: ['Java', 'Spring Boot', 'MsSQL', 'Angular', 'e-charts', 'Bootstrap5', 'Crystal report'],
-    status: 'Upcoming' as const,
-    featured: true,
-    order_index: 3,
-    created_at: '',
-  },
-  {
-    id: '4',
-    title: 'Money Manager',
-    description: 'Personal finance application enabling users to track income, expenses, budgets, dreams and goals with clear insights, reports, and visual analytics.',
-    image_url: '/projects/MM/1.png',
-    github_url: 'https://github.com/zubayerahamed/money-manager.git',
-    live_url: 'https://mm.zubayerahamed.com/',
-    technologies: ['PHP', 'Laravel', 'MySQL', 'jQuery', 'HTML', 'Bootstrap5', 'DOMPDF'],
-    status: 'Past' as const,
-    featured: false,
-    order_index: 4,
-    created_at: '',
-  },
-  {
-    id: '5',
-    title: 'Brihatta Art Foundation',
-    description: 'Artist-led cultural platform in Dhaka fostering creative exchange through residencies, exhibitions, and community-driven dialogue and learning.',
-    image_url: '/projects/Brihatta/1.png',
-    github_url: '',
-    live_url: 'https://brihattaartfoundation.com/',
-    technologies: ['PHP', 'Laravel', 'MySQL', 'jQuery', 'HTML', 'Bootstrap5', 'DOMPDF'],
-    status: 'Present' as const,
-    featured: true,
-    order_index: 5,
-    created_at: '',
-  },
-  {
-    id: '6',
-    title: 'Eldorado Holdings Ltd.',
-    description: 'Real estate developer delivering quality residential projects in Dhaka, driving urban growth and improved lifestyles aligned with national development policies.',
-    image_url: '/projects/Eldorado/1.png',
-    github_url: '',
-    live_url: 'https://eldoradoholdingsltd.com/home',
-    technologies: ['PHP', 'Laravel', 'MySQL', 'jQuery', 'HTML', 'Bootstrap5', 'DOMPDF'],
-    status: 'Past' as const,
-    featured: false,
-    order_index: 6,
-    created_at: '',
-  },
-   {
-    id: '7',
-    title: 'NetCourier',
-    description: 'UK-focused courier management platform streamlining bookings, dispatch, driver allocation, real-time tracking, proof of delivery, and invoicing in one system.',
-    image_url: '/projects/0.png',
-    github_url: '',
-    live_url: '',
-    technologies: ['Java', 'Spring MVC', 'PostgreSQL', 'jQuery', 'Bootstrap3', 'FOP Report'],
-    status: 'Past' as const,
-    featured: true,
-    order_index: 7,
-    created_at: '',
-  },
-  {
-    id: '8',
-    title: 'AJU-ERP (Enterprise ERP System)',
-    description: 'Scalable ERP for small to mid-sized businesses, unifying inventory, sales, procurement, and accounting on Spring Boot with Oracle Database.',
-    image_url: '/projects/0.png',
-    github_url: '',
-    live_url: '',
-    technologies: ['Java', 'Spring Boot', 'Oracle DB', 'jQuery', 'HTML', 'Bootstrap3', 'Birt Report'],
-    status: 'Past' as const,
-    featured: false,
-    order_index: 8,
-    created_at: '',
-  },
-  {
-    id: '9',
-    title: 'LIRA (Enterprise ERP System)',
-    description: 'Enterprise-grade ERP built on Spring Boot, seamlessly integrating procurement, inventory, sales, and financial operations for scalable business management.',
-    image_url: '/projects/0.png',
-    github_url: '',
-    live_url: '',
-    technologies: ['Java', 'Spring Boot', 'MsSQL', 'jQuery', 'HTML', 'Bootstrap5', 'Crystal report'],
-    status: 'Present' as const,
-    featured: true,
-    order_index: 9,
-    created_at: '',
-  },
-   {
-    id: '10',
-    title: 'Money Manager App',
-    description: 'Personal finance application enabling users to track income, expenses, budgets, dreams, goals, shopping and habits with clear insights, reports, and visual analytics.',
-    image_url: '/projects/MONEY-MANAGER-APP/1.png',
-    github_url: 'https://github.com/zubayerahamed/MONEYIO-APP.git',
-    live_url: 'https://mm.zayaanit.com/',
-    technologies: ['Angular', 'Ionic', 'Capacitor'],
-    status: 'Present' as const,
-    featured: true,
-    order_index: 10,
-    created_at: '',
-  },
-   {
-    id: '11',
-    title: 'Bishwajit Goswami',
-    description: 'Portfolio website of an leading and renowned  artist, educator and curator.',
-    image_url: '/projects/BISHWAJIT/1.png',
-    github_url: '',
-    live_url: 'https://bishwajitgoswami.com/',
-    technologies: ['HTML', 'CSS', 'Bootstrap 5', 'jQuery'],
-    status: 'Past' as const,
-    featured: false,
-    order_index: 11,
-    created_at: '',
-  },
+const filters: { value: 'all' | ProjectStatus; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'Present', label: 'Active' },
+  { value: 'Past', label: 'Delivered' },
+  { value: 'Upcoming', label: 'In development' },
 ];
 
 export default function Projects() {
-  const [selectedStatus, setSelectedStatus] = useState<string>('all');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
-  const [screenshots, setScreenshots] = useState<ProjectScreenshot[]>([]);
+  const [filter, setFilter] = useState<string>('all');
+  const [viewing, setViewing] = useState<Project | null>(null);
+  const [shot, setShot] = useState<number | null>(null);
 
-  const fetchScreenshots = (projectId: string) => {
-    const projectScreenshotsData = projectScreenshots.filter(s => s.project_id === projectId);
-    setScreenshots(projectScreenshotsData);
-  };
+  const visible = useMemo(
+    () => (filter === 'all' ? projects : projects.filter((p) => p.status === filter)),
+    [filter]
+  );
 
-  const handleViewScreenshots = (projectId: string) => {
-    setSelectedProjectId(projectId);
-    fetchScreenshots(projectId);
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setSelectedProjectId(null);
-    setScreenshots([]);
-  };
-
-  const filteredProjects = selectedStatus === 'all'
-    ? projects
-    : projects.filter(p => p.status === selectedStatus);
-
-  const statusLabels = {
-    all: 'All Projects',
-    Past: 'Past Projects',
-    Present: 'Present Projects',
-    Upcoming: 'Upcoming Projects',
+  const openGallery = (project: Project) => {
+    setViewing(project);
+    setShot(0);
   };
 
   return (
-    <section id="projects" className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-            Projects
-          </h2>
-          <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Showcase of my work across various domains and technologies
-          </p>
+    <section id="projects" className="section">
+      <div className="page">
+        <SectionHeader
+          title="Selected work"
+          intro="ERP platforms, point-of-sale systems, logistics software and product websites. Open any project to browse its screenshots."
+        />
+
+        <div className="mb-8">
+          <FilterTabs
+            label="Filter projects by status"
+            value={filter}
+            onChange={setFilter}
+            options={filters
+              .map((f) => ({
+                ...f,
+                count: f.value === 'all' ? projects.length : projects.filter((p) => p.status === f.value).length,
+              }))
+              .filter((f) => f.count > 0)}
+          />
         </div>
 
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {Object.entries(statusLabels).map(([status, label]) => (
-            <button
-              key={status}
-              onClick={() => setSelectedStatus(status)}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-200 ${
-                selectedStatus === status
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group"
-            >
-              <div className="relative h-48 overflow-hidden bg-gradient-to-br from-blue-500 to-blue-700">
+        <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          {visible.map((project) => (
+            <li key={project.id} className="flex flex-col overflow-hidden rounded-3xl border border-line bg-white">
+              <button
+                onClick={() => openGallery(project)}
+                className="group relative block aspect-[16/10] overflow-hidden bg-paper text-left"
+                aria-label={`View ${project.screenshots.length} screenshots of ${project.title}`}
+              >
                 <img
-                  src={project.image_url}
-                  alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  src={project.cover}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
                 />
-                {project.featured && (
-                  <div className="absolute top-4 right-4 bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-current" />
-                    Featured
+                <span className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/0 to-ink/0" />
+                <span className="absolute left-3 top-3 inline-flex items-center gap-2 rounded-full bg-ink/80 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur">
+                  <span className={`h-1.5 w-1.5 rounded-full ${statusDot[project.status]}`} />
+                  {statusLabel[project.status]}
+                </span>
+                <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-ink shadow-sm transition-transform group-hover:-translate-y-0.5">
+                  <Images className="h-3.5 w-3.5" />
+                  {project.screenshots.length} {project.screenshots.length === 1 ? 'screenshot' : 'screenshots'}
+                </span>
+              </button>
+
+              <div className="flex flex-1 flex-col p-6">
+                <p className="text-sm font-medium text-spring">{project.kind}</p>
+                <h3 className="mt-1 text-[1.4rem] font-bold leading-tight">{project.title}</h3>
+                <p className="mt-3 leading-relaxed text-muted">{project.description}</p>
+
+                <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="Technologies">
+                  {project.technologies.map((tech) => (
+                    <li key={tech} className="tag">
+                      {tech}
+                    </li>
+                  ))}
+                </ul>
+
+                {(project.liveUrl || project.githubUrl) && (
+                  <div className="mt-auto flex gap-2 pt-6">
+                    {project.liveUrl && (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-outline !min-h-[40px] flex-1 !px-4 !text-sm"
+                      >
+                        Visit site
+                        <ArrowUpRight className="h-4 w-4" />
+                      </a>
+                    )}
+                    {project.githubUrl && (
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-outline !min-h-[40px] flex-1 !px-4 !text-sm"
+                      >
+                        <Github className="h-4 w-4" />
+                        Source code
+                      </a>
+                    )}
                   </div>
                 )}
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-semibold text-gray-900 capitalize">
-                  {project.status}
-                </div>
               </div>
-
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  {project.title}
-                </h3>
-                <p className="text-gray-600 mb-4 leading-relaxed text-justify">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap justify-evenly gap-2 mb-4">
-                  {project.technologies.map((tech, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex gap-3 flex-col">
-                  <button
-                    onClick={() => handleViewScreenshots(project.id)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium"
-                  >
-                    <Image className="w-4 h-4" />
-                    View Screenshots
-                  </button>
-                  <div className="flex gap-3">
-                    {project.github_url && (
-                      <a
-                        href={project.github_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium"
-                      >
-                        <Github className="w-4 h-4" />
-                        Code
-                      </a>
-                    )}
-                    {project.live_url && (
-                      <a
-                        href={project.live_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        Demo
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+            </li>
           ))}
-        </div>
-
-        {filteredProjects.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No projects found in this category.</p>
-          </div>
-        )}
+        </ul>
       </div>
 
-      {selectedProjectId && (
-        <ScreenshotsModal
-          isOpen={modalOpen}
-          screenshots={screenshots}
-          projectTitle={projects.find(p => p.id === selectedProjectId)?.title || ''}
-          onClose={handleCloseModal}
-        />
-      )}
+      <Lightbox
+        title={viewing?.title ?? ''}
+        items={(viewing?.screenshots ?? []).map((src, i) => ({
+          src,
+          alt: `${viewing?.title} screenshot ${i + 1}`,
+        }))}
+        index={viewing ? shot : null}
+        onIndexChange={setShot}
+        onClose={() => {
+          setViewing(null);
+          setShot(null);
+        }}
+      />
     </section>
   );
 }

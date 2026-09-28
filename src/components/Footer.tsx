@@ -1,73 +1,42 @@
-import { Heart, Code2 } from 'lucide-react';
+import { ArrowUp, Github, Linkedin } from 'lucide-react';
+import { profile } from '../data/portfolio';
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className="bg-gray-900 text-white py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-3 gap-8 mb-8">
-          <div>
-            <h3 className="text-2xl font-bold mb-4">Zubayer Ahamed</h3>
-            <p className="text-gray-400 leading-relaxed">
-              Fullstack Software Engineer specializing in Java and Spring Boot.
-              Building robust enterprise solutions.
-            </p>
-          </div>
-
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li>
-                <a href="#about" className="text-gray-400 hover:text-white transition-colors">
-                  About
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="text-gray-400 hover:text-white transition-colors">
-                  Services
-                </a>
-              </li>
-              <li>
-                <a href="#projects" className="text-gray-400 hover:text-white transition-colors">
-                  Projects
-                </a>
-              </li>
-              <li>
-                <a href="#contact" className="text-gray-400 hover:text-white transition-colors">
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Get In Touch</h4>
-            <ul className="space-y-2 text-gray-400">
-              <li>Dhaka, Bangladesh</li>
-              <li>
-                <a href="mailto:zubayer@example.com" className="hover:text-white transition-colors">
-                  zubayerahamed1990@gmail.com
-                </a>
-              </li>
-              <li>
-                <a href="tel:+8801234567890" className="hover:text-white transition-colors">
-                  +880 1748562164
-                </a>
-              </li>
-            </ul>
-          </div>
+    <footer className="border-t border-white/10 bg-ink text-white/60">
+      <div className="page flex flex-col gap-6 py-8 text-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
+          <img src="/favicon.svg" alt="" className="h-8 w-8 rounded-lg" />
+          <p>
+            © {new Date().getFullYear()} {profile.name}. {profile.title}, {profile.location}.
+          </p>
         </div>
-
-        <div className="border-t border-gray-800 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm flex items-center gap-2">
-              Made with <Heart className="w-4 h-4 text-red-500 fill-current" /> and <Code2 className="w-4 h-4 text-blue-500" />
-            </p>
-            <p className="text-gray-400 text-sm">
-              © {currentYear} Zubayer Ahamed. All rights reserved.
-            </p>
-          </div>
+        <div className="flex w-full items-center gap-1 sm:w-auto">
+          <a
+            href={profile.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            className="flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10 hover:text-white"
+          >
+            <Github className="h-5 w-5" />
+          </a>
+          <a
+            href={profile.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            className="flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10 hover:text-white"
+          >
+            <Linkedin className="h-5 w-5" />
+          </a>
+          <a
+            href="#home"
+            className="ml-auto inline-flex min-h-[44px] sm:ml-2 items-center gap-2 rounded-full border border-white/15 px-4 font-medium text-white/80 hover:border-white/40 hover:text-white"
+          >
+            <ArrowUp className="h-4 w-4" />
+            Back to top
+          </a>
         </div>
       </div>
     </footer>

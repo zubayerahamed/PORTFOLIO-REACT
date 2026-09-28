@@ -1,148 +1,147 @@
-import { ExternalLink, Calendar } from 'lucide-react';
+import { BadgeCheck, GraduationCap, Maximize2 } from 'lucide-react';
+import { useState } from 'react';
+import { certifications, education, type Degree } from '../data/portfolio';
+import { formatMonth } from '../lib/dates';
+import Lightbox from './ui/Lightbox';
+import SectionHeader from './ui/SectionHeader';
 
-type Certification = {
-  id: string;
-  title: string;
-  issuer: string;
-  issue_date: string;
-  expiry_date: string | null;
-  credential_id: string;
-  credential_url: string;
-  image_url: string;
-  order_index: number;
-  created_at: string;
-};
+const [featured, ...others] = education;
 
-const certifications: Certification[] = [
-  {
-    id: '1',
-    title: 'Oracle Certified Professional, Java SE 6 Programmer',
-    issuer: 'Oracle',
-    issue_date: '2018-04-09',
-    expiry_date: null,
-    credential_id: '1Z0-851',
-    credential_url: 'https://www.youracclaim.com/badges/90c5100b-d459-4875-8240-fa5c1f243bc2',
-    image_url: '/certificates/ORACLE.png',
-    order_index: 1,
-    created_at: '',
-  },
-  {
-    id: '2',
-    title: 'Certificate for Best Performance in Java Programming',
-    issuer: 'IDB-BISEW',
-    issue_date: '2018-04-22',
-    expiry_date: null,
-    credential_id: '#1209231',
-    credential_url: '',
-    image_url: '/certificates/IDB1.png',
-    order_index: 2,
-    created_at: '',
-  },
-  {
-    id: '3',
-    title: 'Enterprise System Analysis & Design With J2EE',
-    issuer: 'IDB-BISEW',
-    issue_date: '2018-04-09',
-    expiry_date: null,
-    credential_id: '#1209231',
-    credential_url: '',
-    image_url: '/certificates/IDB2.png',
-    order_index: 3,
-    created_at: '',
-  },
-  {
-    id: '4',
-    title: 'Enterprise System Analysis & Design With J2EE',
-    issuer: 'DIIT (Daffodil Institute of IT).',
-    issue_date: '2017-10-04',
-    expiry_date: null,
-    credential_id: '1000835',
-    credential_url: '',
-    image_url: '/certificates/DIIT.png',
-    order_index: 4,
-    created_at: '',
-  },
-  {
-    id: '5',
-    title: 'Web Application Development With PHP & MySQL',
-    issuer: 'BASIS (BITM)',
-    issue_date: '2016-08-25',
-    expiry_date: null,
-    credential_id: '128052',
-    credential_url: '',
-    image_url: '/certificates/BITM.png',
-    order_index: 5,
-    created_at: '',
-  },
-  
-];
+const institutionLine = (d: Degree) =>
+  [d.affiliation ? `${d.institution} (${d.affiliation})` : d.institution, d.department, d.location].join(', ');
 
 export default function Certifications() {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
-  };
+  const [index, setIndex] = useState<number | null>(null);
 
   return (
-    <section id="certifications" className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-            Certifications
-          </h2>
-          <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Professional certifications and achievements
-          </p>
-        </div>
+    <section id="certifications" className="section">
+      <div className="page">
+        <SectionHeader
+          title="Education & certifications"
+          intro="Formal study and credentials behind the day-to-day work."
+        />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {certifications.map((cert) => (
+        {featured && (
+          <div className="relative overflow-hidden rounded-3xl bg-ink p-6 text-white sm:p-10">
             <div
-              key={cert.id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group"
-            >
-              <div className="relative overflow-hidden">
-                <img
-                  src={cert.image_url}
-                  alt={cert.title}
-                  className="w-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-300"
-                />
-              </div>
-
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 leading-tight">
-                  {cert.title}
+              aria-hidden
+              className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:40px_40px] [mask-image:radial-gradient(ellipse_at_90%_50%,#000_10%,transparent_60%)]"
+            />
+            <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
+              <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-spring text-white">
+                <GraduationCap className="h-8 w-8" strokeWidth={1.75} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-spring-bright">
+                  {featured.level}
+                  {featured.completed && `, completed ${featured.completed}`}
+                </p>
+                <h3 className="mt-1 text-2xl font-bold leading-tight sm:text-[2rem]">
+                  {featured.degree} ({featured.abbreviation})
                 </h3>
-                <p className="text-blue-600 font-semibold mb-4">{cert.issuer}</p>
+                <p className="mt-2 text-white/70">{institutionLine(featured)}</p>
+              </div>
+              {featured.completed && (
+                <p aria-hidden className="hidden text-7xl font-extrabold tracking-display text-white/10 lg:block">
+                  {featured.completed}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
 
-                <div className="space-y-2 mb-4 text-sm text-gray-600">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>Issued: {formatDate(cert.issue_date)}</span>
+        {others.length > 0 && (
+          <ul className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-6 lg:gap-6">
+            {others.map((d) => (
+              <li key={d.degree} className="flex gap-5 rounded-3xl border border-line bg-white p-6 sm:p-8">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-spring-soft text-spring">
+                  <GraduationCap className="h-6 w-6" strokeWidth={1.75} />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-spring">
+                    {d.level}
+                    {d.completed && `, completed ${d.completed}`}
+                  </p>
+                  <h3 className="mt-1 text-xl font-bold leading-snug">{d.degree}</h3>
+                  <p className="mt-2 leading-relaxed text-muted">{institutionLine(d)}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <h3 className="mb-6 mt-14 text-2xl font-bold sm:mt-16">Certifications</h3>
+
+        <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          {certifications.map((cert, i) => (
+            <li key={`${cert.title}-${cert.issuer}`} className="flex flex-col rounded-3xl border border-line bg-white p-3">
+              <button
+                onClick={() => setIndex(i)}
+                className="group relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl bg-paper p-4"
+                aria-label={`View certificate: ${cert.title}`}
+              >
+                <img
+                  src={cert.image}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="max-h-full max-w-full rounded-md object-contain shadow-sm transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+                <span className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white text-ink opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                  <Maximize2 className="h-4 w-4" />
+                </span>
+              </button>
+
+              <div className="flex flex-1 flex-col px-3 pb-3 pt-5">
+                <p className="text-sm font-medium text-spring">{cert.issuer}</p>
+                <h3 className="mt-1 text-lg font-bold leading-snug">{cert.title}</h3>
+                <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+                  <div className="flex gap-1.5">
+                    <dt className="text-muted">Issued</dt>
+                    <dd className="font-medium tabular-nums">{formatMonth(cert.issued)}</dd>
                   </div>
-                </div>
-
-                <div className="text-sm text-gray-500 mb-4 font-mono">
-                  ID: {cert.credential_id}
-                </div>
-
-                {cert.credential_url && (
-                  <a
-                    href={cert.credential_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    Verify
-                  </a>
+                  <div className="flex gap-1.5">
+                    <dt className="text-muted">Credential</dt>
+                    <dd className="font-medium tabular-nums">{cert.credentialId}</dd>
+                  </div>
+                </dl>
+                {cert.credentialUrl && (
+                  <div className="mt-auto pt-5">
+                    <a
+                      href={cert.credentialUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-primary !min-h-[40px] w-full !text-sm"
+                    >
+                      <BadgeCheck className="h-4 w-4" />
+                      Verify credential
+                    </a>
+                  </div>
                 )}
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
+
+      <Lightbox
+        title="Certifications"
+        items={certifications.map((c) => ({
+          src: c.image,
+          alt: c.title,
+          caption: (
+            <>
+              <span className="font-semibold text-white">{c.title}</span>
+              <span className="block text-sm">
+                {c.issuer}, {formatMonth(c.issued)}
+              </span>
+            </>
+          ),
+        }))}
+        index={index}
+        onIndexChange={setIndex}
+        onClose={() => setIndex(null)}
+      />
     </section>
   );
 }

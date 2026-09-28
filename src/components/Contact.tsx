@@ -1,202 +1,149 @@
-import { Mail, Phone, MapPin, Github, Linkedin, Twitter, Send } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowUpRight, Github, Linkedin, Mail, MapPin, Phone, Send } from 'lucide-react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { profile } from '../data/portfolio';
+
+const channels = [
+  { icon: Mail, label: 'Email', value: profile.email, href: `mailto:${profile.email}` },
+  { icon: Phone, label: 'Phone', value: profile.phone, href: profile.phoneHref },
+  { icon: Linkedin, label: 'LinkedIn', value: 'in/zubayerahamed', href: profile.linkedin, external: true },
+  { icon: Github, label: 'GitHub', value: 'zubayerahamed', href: profile.github, external: true },
+];
+
+const fieldClass =
+  'w-full rounded-xl border border-line bg-white px-4 py-3 text-base text-ink placeholder:text-muted/60 transition-colors focus:border-spring focus:outline-none focus:ring-4 focus:ring-spring/15';
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [composed, setComposed] = useState(false);
 
-  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setStatus('sending');
-
-    setTimeout(() => {
-      console.log('Form submitted:', formData);
-      setStatus('success');
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setTimeout(() => setStatus('idle'), 3000);
-    }, 1000);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const body = `${form.message}\n\n${form.name}\n${form.email}`;
+    window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(form.subject)}&body=${encodeURIComponent(body)}`;
+    setComposed(true);
   };
 
   return (
-    <section id="contact" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-            Get In Touch
+    <section id="contact" className="section relative overflow-hidden bg-ink text-white">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_20%_30%,#000_10%,transparent_60%)]"
+      />
+      <div className="page relative grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
+        <div className="lg:col-span-5">
+          <h2 className="text-center text-[2.5rem] lg:text-left font-extrabold leading-[1] sm:text-6xl lg:text-[4rem]">
+            Have a system to build or fix?
           </h2>
-          <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Let's discuss your project or opportunity. I'm always open to new challenges.
+          <p className="mx-auto mt-6 max-w-md text-center text-lg leading-relaxed text-white/70 lg:mx-0 lg:text-left">
+            I take on selected freelance projects and technical consulting, and I'm open to full-time roles with
+            real engineering challenges and system ownership.
+          </p>
+
+          <ul className="mt-10 divide-y divide-white/10 border-y border-white/10">
+            {channels.map(({ icon: Icon, label, value, href, external }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  className="group flex min-h-[64px] items-center gap-4 py-3"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 transition-colors group-hover:bg-spring">
+                    <Icon className="h-[18px] w-[18px]" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm text-white/50">{label}</span>
+                    <span className="block truncate font-medium">{value}</span>
+                  </span>
+                  <ArrowUpRight className="h-5 w-5 shrink-0 text-white/30 transition-colors group-hover:text-spring-bright" />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-5 flex items-center gap-2 text-sm text-white/50">
+            <MapPin className="h-4 w-4" />
+            Based in {profile.location}
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          <div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">
-              Contact Information
-            </h3>
+        <div className="lg:col-span-7">
+          <form onSubmit={onSubmit} className="rounded-3xl bg-white p-6 text-ink shadow-2xl shadow-black/20 sm:p-10">
+            <h3 className="text-2xl font-bold">Send a message</h3>
+            <p className="mt-1.5 text-muted">Tell me what you're working on and where I can help.</p>
 
-            <div className="space-y-6 mb-8">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Mail className="w-6 h-6 text-blue-600" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-1">Email</h4>
-                  <a href="mailto:zubayer@example.com" className="text-gray-600 hover:text-blue-600 transition-colors">
-                    zubayerahamed1990@gmail.com
-                  </a>
-                </div>
+            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="name" className="mb-2 block text-sm font-semibold">
+                  Your name
+                </label>
+                <input id="name" name="name" autoComplete="name" required value={form.name} onChange={onChange} className={fieldClass} />
               </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-6 h-6 text-blue-600" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-1">Phone</h4>
-                  <a href="tel:+8801234567890" className="text-gray-600 hover:text-blue-600 transition-colors">
-                    +880 1748562164
-                  </a>
-                </div>
+              <div>
+                <label htmlFor="email" className="mb-2 block text-sm font-semibold">
+                  Your email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={form.email}
+                  onChange={onChange}
+                  className={fieldClass}
+                />
               </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-6 h-6 text-blue-600" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-1">Location</h4>
-                  <p className="text-gray-600">Dhaka, Bangladesh</p>
-                </div>
+              <div className="sm:col-span-2">
+                <label htmlFor="subject" className="mb-2 block text-sm font-semibold">
+                  Subject
+                </label>
+                <input
+                  id="subject"
+                  name="subject"
+                  required
+                  placeholder="ERP integration, new project, full-time role…"
+                  value={form.subject}
+                  onChange={onChange}
+                  className={fieldClass}
+                />
               </div>
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Follow Me</h4>
-              <div className="flex gap-4">
-                <a
-                  href="https://github.com/zubayerahamed"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 bg-gray-900 rounded-lg flex items-center justify-center hover:bg-gray-800 transition-colors group"
-                >
-                  <Github className="w-6 h-6 text-white" />
-                </a>
-                <a
-                  href="https://linkedin.com/in/zubayerahamed"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors group"
-                >
-                  <Linkedin className="w-6 h-6 text-white" />
-                </a>
+              <div className="sm:col-span-2">
+                <label htmlFor="message" className="mb-2 block text-sm font-semibold">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={6}
+                  placeholder="What are you building, and where could you use help?"
+                  value={form.message}
+                  onChange={onChange}
+                  className={`${fieldClass} resize-y`}
+                />
               </div>
             </div>
 
-            <div className="mt-8 p-6 bg-white rounded-xl shadow-lg">
-              <h4 className="font-semibold text-gray-900 mb-3">Availability</h4>
-              <p className="text-gray-600 leading-relaxed">
-                Available for selective freelance engagements and technical consulting assignments.
-                Open to full-time roles that offer meaningful engineering challenges, system ownership,
-                and long-term growth opportunities.
+            <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-muted">Opens your email app with the message filled in.</p>
+              <button type="submit" className="btn-primary shrink-0">
+                <Send className="h-4 w-4" />
+                Compose email
+              </button>
+            </div>
+
+            {composed && (
+              <p role="status" className="mt-5 rounded-xl bg-spring-soft px-4 py-3 text-sm text-spring-dark">
+                Your email app should now be open with the message ready to send. If nothing opened, email me at{' '}
+                <a href={`mailto:${profile.email}`} className="font-semibold underline">
+                  {profile.email}
+                </a>
+                .
               </p>
-            </div>
-          </div>
-
-          <div>
-            <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                Send a Message
-              </h3>
-
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Your Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all duration-200 outline-none"
-                    placeholder="john@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all duration-200 outline-none"
-                    placeholder="Project Inquiry"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={5}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all duration-200 outline-none resize-none"
-                    placeholder="Tell me about your project..."
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={status === 'sending'}
-                  className="w-full px-6 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  {status === 'sending' ? (
-                    'Sending...'
-                  ) : status === 'success' ? (
-                    'Message Sent!'
-                  ) : (
-                    <>
-                      <Send className="w-5 h-5" />
-                      Send Message
-                    </>
-                  )}
-                </button>
-
-                {status === 'success' && (
-                  <p className="text-green-600 text-center font-medium">
-                    Thank you! I'll get back to you soon.
-                  </p>
-                )}
-              </div>
-            </form>
-          </div>
+            )}
+          </form>
         </div>
       </div>
     </section>

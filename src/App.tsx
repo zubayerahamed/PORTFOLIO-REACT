@@ -13,16 +13,24 @@ import Footer from './components/Footer';
 function App() {
   return (
     <div className="min-h-screen">
+      <a
+        href="#about"
+        className="sr-only left-4 top-4 z-[70] rounded-full bg-white px-4 py-2 font-semibold text-ink focus:not-sr-only focus:fixed"
+      >
+        Skip to content
+      </a>
       <Navigation />
-      <Hero />
-      <About />
-      <Services />
-      <Skills />
-      <Projects />
-      <Experience />
-      <Certifications />
-      <Gallery />
-      <Contact />
+      <main>
+        <Hero />
+        <About />
+        <Services />
+        <Skills />
+        <Projects />
+        <Experience />
+        <Certifications />
+        <Gallery />
+        <Contact />
+      </main>
       <Footer />
     </div>
   );
