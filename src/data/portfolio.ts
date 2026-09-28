@@ -149,6 +149,81 @@ export type Project = {
 const shots = (folder: string, count: number) =>
   Array.from({ length: count }, (_, i) => `/projects/${folder}/${i + 1}.png`);
 
+type ThemedShots = { dark: string[]; light: string[] };
+
+const themedShots = (folder: string, dark: number, light: number, ext = 'jpg'): ThemedShots => ({
+  dark: Array.from({ length: dark }, (_, i) => `/projects/${folder}-dark/${i + 1}.${ext}`),
+  light: Array.from({ length: light }, (_, i) => `/projects/${folder}-light/${i + 1}.${ext}`),
+});
+
+// The product I'm building now, shown above the project grid. Screenshots follow the site theme.
+export const flagship = {
+  title: 'Karbar24 POS',
+  tagline: 'Everything your restaurant counter needs.',
+  description:
+    'An offline-first point-of-sale platform for food businesses, from a single counter to multi-outlet franchises. It runs on Windows desktops and Android devices, keeps billing through internet outages, and grows into a cloud setup with waiter and kitchen apps.',
+  audience: ['Restaurants', 'Food courts', 'Cloud kitchens', 'Franchises', 'Small food businesses'],
+  highlights: [
+    {
+      icon: 'offline',
+      title: 'Keeps billing offline',
+      body: 'Orders, receipts and payments run from a local SQLite database, so the counter never stops when the internet does.',
+    },
+    {
+      icon: 'kitchen',
+      title: 'Counter to kitchen',
+      body: 'Orders go straight to the kitchen as KOTs, with a kitchen display and a waiter app for taking orders at the table.',
+    },
+    {
+      icon: 'tables',
+      title: 'Floor and table service',
+      body: 'Tables by floor, table merging, dine-in, takeaway and parcel orders, waiter assignment, and held orders to recall later.',
+    },
+    {
+      icon: 'menu',
+      title: 'Menu engine',
+      body: 'Variants, modifiers, bundles, prep times, and a step-by-step set-menu builder with a choice for every course.',
+    },
+    {
+      icon: 'payment',
+      title: 'Checkout that fits Bangladesh',
+      body: 'Cash, card and mobile wallets like bKash and Nagad, customer dues, coupons, complimentary items, VAT, service charge and rounding.',
+    },
+    {
+      icon: 'scale',
+      title: 'Built to scale',
+      body: 'Multi-tenant: one account runs several businesses, each with multiple terminals, cash-counted shifts and its own reports.',
+    },
+  ],
+  engineering: [
+    'One Angular codebase shipped as a Windows desktop app (Electron) and an Android app (Ionic)',
+    'Offline-first local storage in SQLite, with a Spring Boot and PostgreSQL cloud back end',
+    'Multi-tenant architecture with multi-business, multi-terminal and multi-outlet support',
+    'Standalone editions from Lite to Ultra, and a Cloud edition with waiter app and kitchen display',
+    'Country-specific tax and regulations as plugins, keeping the core POS unchanged',
+  ],
+  technologies: ['Angular', 'Ionic', 'Electron', 'Java', 'Spring Boot', 'SQLite', 'PostgreSQL'],
+  desktop: themedShots('KARBAR24/desktop', 13, 13),
+  mobile: themedShots('KARBAR24/mobile', 11, 13),
+  desktopCaptions: [
+    'POS terminal',
+    'Set menu builder',
+    'Table selection',
+    'Merging tables',
+    'Checkout and payment',
+    'Customer receipt',
+    'Held orders',
+    'Quick settings',
+    'Shift control',
+    'Business selection',
+    'POS terminal, compact list without images',
+    'Customer dues',
+    'Customer dues history',
+  ],
+  // Index of the POS screen in each mobile set, used as the phone preview.
+  mobileCover: { dark: 0, light: 2 },
+};
+
 export const projects: Project[] = [
   {
     id: 'aspi',

@@ -53,8 +53,9 @@ export default function Hero() {
             className="mx-auto mt-7 max-w-xl animate-rise-in text-lg leading-relaxed text-white/75 sm:text-xl lg:mx-0"
             style={{ animationDelay: '200ms' }}
           >
-            Senior software engineer in Dhaka. I design and build the systems businesses run on: ERP, point of
-            sale and SaaS platforms, with Java and Spring Boot at the core.
+            Senior software engineer in Dhaka, building dependable software across web, mobile, desktop and
+            cloud. Enterprise systems like ERP are my deepest expertise, and I take products of any kind from
+            idea to production.
           </p>
 
           <div

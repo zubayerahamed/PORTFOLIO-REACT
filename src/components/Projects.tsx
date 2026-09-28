@@ -1,6 +1,7 @@
 import { ArrowUpRight, Github, Images } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { projects, type Project, type ProjectStatus } from '../data/portfolio';
+import Flagship from './Flagship';
 import FilterTabs from './ui/FilterTabs';
 import Lightbox from './ui/Lightbox';
 import SectionHeader from './ui/SectionHeader';
@@ -44,8 +45,10 @@ export default function Projects() {
       <div className="page">
         <SectionHeader
           title="Selected work"
-          intro="ERP platforms, point-of-sale systems, logistics software and product websites. Open any project to browse its screenshots."
+          intro="Led by Karbar24, the restaurant POS platform I'm building now, alongside ERP platforms, logistics software and product websites. Open any project to browse its screenshots."
         />
+
+        <Flagship />
 
         <div className="mb-8">
           <FilterTabs
