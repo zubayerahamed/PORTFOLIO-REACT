@@ -25,14 +25,14 @@ export default function About() {
   };
 
   return (
-    <section id="about" className="section bg-white">
+    <section id="about" className="section bg-surface">
       <div className="page grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-16">
         <div className="text-center lg:col-span-7 lg:text-left">
           <h2 className="text-[2.25rem] font-extrabold leading-[1.02] sm:text-5xl lg:text-[3.5rem]">
             I build software that businesses depend on every day.
           </h2>
 
-          <div className="mx-auto mt-8 max-w-[62ch] lg:mx-0 space-y-5 text-[17px] leading-[1.7] text-ink-600 sm:text-lg">
+          <div className="mx-auto mt-8 max-w-[62ch] lg:mx-0 space-y-5 text-[17px] leading-[1.7] text-fg-2 sm:text-lg">
             <p>
               I'm a full-stack engineer with deep expertise in Java, Spring Boot, Laravel, Angular and Ionic. I
               build scalable, high-performance enterprise applications for web, desktop and mobile.
@@ -58,7 +58,7 @@ export default function About() {
             {figures.map((f) => (
               <div key={f.label}>
                 <dt className="sr-only">{f.label}</dt>
-                <dd className="text-4xl font-extrabold tracking-display text-ink sm:text-5xl">{f.value}</dd>
+                <dd className="text-4xl font-extrabold tracking-display text-fg sm:text-5xl">{f.value}</dd>
                 <dd className="mt-2 text-sm leading-snug text-muted sm:text-[15px]">{f.label}</dd>
               </div>
             ))}
@@ -84,29 +84,29 @@ export default function About() {
             </dl>
 
             <div className="mt-6 space-y-2">
-              <div className="flex items-center gap-2 rounded-2xl bg-white p-2 pl-4">
-                <Mail className="h-[18px] w-[18px] shrink-0 text-spring" />
-                <a href={`mailto:${profile.email}`} className="min-w-0 flex-1 truncate font-medium hover:text-spring">
+              <div className="flex items-center gap-2 rounded-2xl bg-surface p-2 pl-4">
+                <Mail className="h-[18px] w-[18px] shrink-0 text-accent" />
+                <a href={`mailto:${profile.email}`} className="min-w-0 flex-1 truncate font-medium hover:text-accent">
                   {profile.email}
                 </a>
                 <button
                   onClick={copyEmail}
-                  className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-semibold text-muted transition-colors hover:bg-paper hover:text-ink"
+                  className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-semibold text-muted transition-colors hover:bg-paper hover:text-fg"
                   aria-live="polite"
                 >
-                  {copied ? <Check className="h-4 w-4 text-spring" /> : <Copy className="h-4 w-4" />}
+                  {copied ? <Check className="h-4 w-4 text-accent" /> : <Copy className="h-4 w-4" />}
                   {copied ? 'Copied' : 'Copy'}
                 </button>
               </div>
               <a
                 href={profile.phoneHref}
-                className="flex min-h-[56px] items-center gap-2 rounded-2xl bg-white px-4 font-medium hover:text-spring"
+                className="flex min-h-[56px] items-center gap-2 rounded-2xl bg-surface px-4 font-medium hover:text-accent"
               >
-                <Phone className="h-[18px] w-[18px] text-spring" />
+                <Phone className="h-[18px] w-[18px] text-accent" />
                 {profile.phone}
               </a>
-              <p className="flex min-h-[56px] items-center gap-2 rounded-2xl bg-white px-4 font-medium">
-                <MapPin className="h-[18px] w-[18px] text-spring" />
+              <p className="flex min-h-[56px] items-center gap-2 rounded-2xl bg-surface px-4 font-medium">
+                <MapPin className="h-[18px] w-[18px] text-accent" />
                 {profile.location}
               </p>
             </div>

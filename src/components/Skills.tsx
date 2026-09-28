@@ -3,7 +3,7 @@ import SectionHeader from './ui/SectionHeader';
 
 export default function Skills() {
   return (
-    <section id="skills" className="section bg-white">
+    <section id="skills" className="section bg-surface">
       <div className="page">
         <SectionHeader
           title="The stack I work in"
@@ -23,9 +23,9 @@ export default function Skills() {
                 {group.skills.map((skill) => (
                   <li
                     key={skill.name}
-                    className="flex min-h-[48px] items-center gap-3 rounded-2xl border border-line bg-white py-2 pl-2.5 pr-4 transition-colors hover:border-spring/40 hover:bg-spring-soft/40"
+                    className="flex min-h-[48px] items-center gap-3 rounded-2xl border border-line bg-surface py-2 pl-2.5 pr-4 transition-colors hover:border-spring/40 hover:bg-spring-soft/40"
                   >
-                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-paper">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-paper dark:bg-white/90">
                       <img
                         src={skill.logo}
                         alt=""

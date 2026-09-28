@@ -17,7 +17,7 @@ export default function Gallery() {
   );
 
   return (
-    <section id="gallery" className="section bg-white">
+    <section id="gallery" className="section bg-surface">
       <div className="page">
         <SectionHeader
           title="Moments along the way"

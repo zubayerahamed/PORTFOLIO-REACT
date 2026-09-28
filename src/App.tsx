@@ -15,7 +15,7 @@ function App() {
     <div className="min-h-screen">
       <a
         href="#about"
-        className="sr-only left-4 top-4 z-[70] rounded-full bg-white px-4 py-2 font-semibold text-ink focus:not-sr-only focus:fixed"
+        className="sr-only left-4 top-4 z-[70] rounded-full bg-surface px-4 py-2 font-semibold text-fg focus:not-sr-only focus:fixed"
       >
         Skip to content
       </a>

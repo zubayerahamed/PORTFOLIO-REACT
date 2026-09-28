@@ -10,7 +10,7 @@ type Props = {
 export default function FilterTabs({ label, options, value, onChange }: Props) {
   return (
     <div className="-mx-4 overflow-x-auto px-4 text-center no-scrollbar sm:mx-0 sm:px-0 lg:text-left">
-      <div role="tablist" aria-label={label} className="inline-flex gap-1 rounded-full border border-line bg-white p-1">
+      <div role="tablist" aria-label={label} className="inline-flex gap-1 rounded-full border border-line bg-surface p-1">
         {options.map((opt) => {
           const selected = opt.value === value;
           return (
@@ -20,12 +20,12 @@ export default function FilterTabs({ label, options, value, onChange }: Props) {
               aria-selected={selected}
               onClick={() => onChange(opt.value)}
               className={`flex min-h-[40px] shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 text-sm font-semibold transition-colors ${
-                selected ? 'bg-ink text-white' : 'text-muted hover:bg-paper hover:text-ink'
+                selected ? 'bg-fg text-surface' : 'text-muted hover:bg-paper hover:text-fg'
               }`}
             >
               {opt.label}
               {opt.count !== undefined && (
-                <span className={`tabular-nums text-xs ${selected ? 'text-white/60' : 'text-muted/70'}`}>{opt.count}</span>
+                <span className={`tabular-nums text-xs ${selected ? 'text-surface/60' : 'text-muted/70'}`}>{opt.count}</span>
               )}
             </button>
           );

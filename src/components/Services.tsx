@@ -34,12 +34,12 @@ export default function Services() {
           intro="From a single API integration to a full ERP rollout, I take on engineering work where reliability matters."
         />
 
-        <ul className="grid overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3 [&>li]:bg-white" style={{ gap: 1 }}>
+        <ul className="grid overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3 [&>li]:bg-surface" style={{ gap: 1 }}>
           {services.map((service) => {
             const Icon = icons[service.icon] ?? Code2;
             return (
               <li key={service.title} className="group p-6 text-center transition-colors sm:text-left hover:bg-spring-soft/40 sm:p-8">
-                <span className="mx-auto flex h-12 w-12 items-center sm:mx-0 justify-center rounded-2xl bg-spring-soft text-spring transition-colors group-hover:bg-spring group-hover:text-white">
+                <span className="mx-auto flex h-12 w-12 items-center sm:mx-0 justify-center rounded-2xl bg-spring-soft text-accent transition-colors group-hover:bg-spring group-hover:text-white">
                   <Icon className="h-6 w-6" strokeWidth={1.75} />
                 </span>
                 <h3 className="mt-6 text-xl font-bold leading-snug">{service.title}</h3>

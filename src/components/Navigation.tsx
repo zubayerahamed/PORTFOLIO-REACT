@@ -1,8 +1,9 @@
-import { Github, Linkedin, Menu, X } from 'lucide-react';
+import { Github, Linkedin, Menu, Moon, Sun, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { profile } from '../data/portfolio';
 import { useActiveSection } from '../hooks/useActiveSection';
 import { useScrollLock } from '../hooks/useScrollLock';
+import { useTheme } from '../hooks/useTheme';
 
 const navItems = [
   { label: 'About', id: 'about' },
@@ -20,6 +21,7 @@ export default function Navigation() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const active = useActiveSection(sectionIds);
+  const { theme, toggle } = useTheme();
 
   useScrollLock(open);
 
@@ -42,14 +44,14 @@ export default function Navigation() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow] duration-300 ${
-        open ? 'bg-ink' : light ? 'bg-white/85 shadow-[0_1px_0_#DDE3EA] backdrop-blur-md' : 'bg-transparent'
+        open ? 'bg-ink' : light ? 'bg-surface/85 shadow-[0_1px_0_rgb(var(--line))] backdrop-blur-md' : 'bg-transparent'
       }`}
     >
       <nav className="page flex h-16 items-center justify-between gap-6 sm:h-[72px]" aria-label="Main">
         <a
           href="#home"
           onClick={() => setOpen(false)}
-          className={`flex items-center gap-2.5 text-[17px] font-bold tracking-tight ${light ? 'text-ink' : 'text-white'}`}
+          className={`flex items-center gap-2.5 text-[17px] font-bold tracking-tight ${light ? 'text-fg' : 'text-white'}`}
         >
           <img src="/favicon.svg" alt="" className="h-8 w-8 rounded-lg" />
           {profile.name}
@@ -66,8 +68,8 @@ export default function Navigation() {
                   className={`relative rounded-full px-3.5 py-2 text-[15px] font-medium transition-colors ${
                     light
                       ? isActive
-                        ? 'bg-paper text-ink'
-                        : 'text-muted hover:text-ink'
+                        ? 'bg-paper text-fg'
+                        : 'text-muted hover:text-fg'
                       : isActive
                         ? 'bg-white/10 text-white'
                         : 'text-white/70 hover:text-white'
@@ -80,7 +82,17 @@ export default function Navigation() {
           })}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
+          <button
+            onClick={toggle}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors ${
+              light ? 'text-fg hover:bg-paper' : 'text-white hover:bg-white/10'
+            }`}
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
           <a href="#contact" className="btn-primary hidden !min-h-[40px] !px-5 !text-sm sm:inline-flex">
             Get in touch
           </a>
@@ -90,7 +102,7 @@ export default function Navigation() {
             aria-controls="mobile-menu"
             aria-label={open ? 'Close menu' : 'Open menu'}
             className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors xl:hidden ${
-              light ? 'text-ink hover:bg-paper' : 'text-white hover:bg-white/10'
+              light ? 'text-fg hover:bg-paper' : 'text-white hover:bg-white/10'
             }`}
           >
             {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}

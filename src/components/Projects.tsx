@@ -63,7 +63,7 @@ export default function Projects() {
 
         <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {visible.map((project) => (
-            <li key={project.id} className="flex flex-col overflow-hidden rounded-3xl border border-line bg-white">
+            <li key={project.id} className="flex flex-col overflow-hidden rounded-3xl border border-line bg-surface">
               <button
                 onClick={() => openGallery(project)}
                 className="group relative block aspect-[16/10] overflow-hidden bg-paper text-left"
@@ -81,14 +81,14 @@ export default function Projects() {
                   <span className={`h-1.5 w-1.5 rounded-full ${statusDot[project.status]}`} />
                   {statusLabel[project.status]}
                 </span>
-                <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-ink shadow-sm transition-transform group-hover:-translate-y-0.5">
+                <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-xs font-semibold text-fg shadow-sm transition-transform group-hover:-translate-y-0.5">
                   <Images className="h-3.5 w-3.5" />
                   {project.screenshots.length} {project.screenshots.length === 1 ? 'screenshot' : 'screenshots'}
                 </span>
               </button>
 
               <div className="flex flex-1 flex-col p-6">
-                <p className="text-sm font-medium text-spring">{project.kind}</p>
+                <p className="text-sm font-medium text-accent">{project.kind}</p>
                 <h3 className="mt-1 text-[1.4rem] font-bold leading-tight">{project.title}</h3>
                 <p className="mt-3 leading-relaxed text-muted">{project.description}</p>
 

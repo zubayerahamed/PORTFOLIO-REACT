@@ -10,7 +10,7 @@ const channels = [
 ];
 
 const fieldClass =
-  'w-full rounded-xl border border-line bg-white px-4 py-3 text-base text-ink placeholder:text-muted/60 transition-colors focus:border-spring focus:outline-none focus:ring-4 focus:ring-spring/15';
+  'w-full rounded-xl border border-line bg-surface px-4 py-3 text-base text-fg placeholder:text-muted/60 transition-colors focus:border-spring focus:outline-none focus:ring-4 focus:ring-spring/15';
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
@@ -69,7 +69,7 @@ export default function Contact() {
         </div>
 
         <div className="lg:col-span-7">
-          <form onSubmit={onSubmit} className="rounded-3xl bg-white p-6 text-ink shadow-2xl shadow-black/20 sm:p-10">
+          <form onSubmit={onSubmit} className="rounded-3xl bg-surface p-6 text-fg shadow-2xl shadow-black/20 ring-1 ring-transparent dark:ring-white/10 sm:p-10">
             <h3 className="text-2xl font-bold">Send a message</h3>
             <p className="mt-1.5 text-muted">Tell me what you're working on and where I can help.</p>
 
@@ -135,7 +135,7 @@ export default function Contact() {
             </div>
 
             {composed && (
-              <p role="status" className="mt-5 rounded-xl bg-spring-soft px-4 py-3 text-sm text-spring-dark">
+              <p role="status" className="mt-5 rounded-xl bg-spring-soft px-4 py-3 text-sm text-spring-dark dark:text-spring-bright">
                 Your email app should now be open with the message ready to send. If nothing opened, email me at{' '}
                 <a href={`mailto:${profile.email}`} className="font-semibold underline">
                   {profile.email}

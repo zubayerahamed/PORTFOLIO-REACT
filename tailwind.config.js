@@ -1,22 +1,31 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
+        // Fixed brand navy for the hero, contact band, footer and overlays (same in both themes).
         ink: {
           DEFAULT: '#0F1B2D',
           800: '#16263D',
           700: '#22354F',
           600: '#3A4D68',
         },
-        paper: '#F3F5F7',
-        line: '#DDE3EA',
-        muted: '#5A6778',
+        // Theme tokens, switched by CSS variables in index.css.
+        paper: 'rgb(var(--paper) / <alpha-value>)',
+        surface: 'rgb(var(--surface) / <alpha-value>)',
+        line: 'rgb(var(--line) / <alpha-value>)',
+        muted: 'rgb(var(--muted) / <alpha-value>)',
+        fg: {
+          DEFAULT: 'rgb(var(--fg) / <alpha-value>)',
+          2: 'rgb(var(--fg-2) / <alpha-value>)',
+        },
+        accent: 'rgb(var(--accent) / <alpha-value>)',
         spring: {
           DEFAULT: '#1E7A4F',
           dark: '#155C3B',
-          soft: '#E6F2EC',
+          soft: 'rgb(var(--spring-soft) / <alpha-value>)',
           bright: '#5FD39A',
         },
         amber: {

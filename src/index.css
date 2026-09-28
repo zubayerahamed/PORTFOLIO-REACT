@@ -3,6 +3,30 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --paper: 243 245 247;
+    --surface: 255 255 255;
+    --line: 221 227 234;
+    --muted: 90 103 120;
+    --fg: 15 27 45;
+    --fg-2: 58 77 104;
+    --accent: 30 122 79;
+    --spring-soft: 230 242 236;
+    color-scheme: light;
+  }
+
+  .dark {
+    --paper: 10 18 32;
+    --surface: 17 27 43;
+    --line: 34 49 74;
+    --muted: 135 149 168;
+    --fg: 230 236 243;
+    --fg-2: 179 191 206;
+    --accent: 95 211 154;
+    --spring-soft: 23 58 44;
+    color-scheme: dark;
+  }
+
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
@@ -10,7 +34,7 @@
   }
 
   body {
-    @apply bg-paper text-ink font-sans antialiased;
+    @apply bg-paper text-fg font-sans antialiased transition-colors duration-300;
     font-feature-settings: 'ss01', 'tnum' 0;
     text-rendering: optimizeLegibility;
   }
@@ -20,7 +44,7 @@
   }
 
   :focus-visible {
-    @apply outline outline-2 outline-offset-2 outline-spring;
+    @apply outline outline-2 outline-offset-2 outline-accent;
   }
 
   h1,
@@ -57,11 +81,11 @@
   }
 
   .btn-outline {
-    @apply btn border border-line bg-white text-ink hover:border-ink/40;
+    @apply btn border border-line bg-surface text-fg hover:border-fg/40;
   }
 
   .tag {
-    @apply inline-flex items-center rounded-md bg-paper px-2 py-1 text-[13px] font-medium text-ink-600;
+    @apply inline-flex items-center rounded-md bg-paper px-2 py-1 text-[13px] font-medium text-fg-2;
   }
 
   .no-scrollbar {

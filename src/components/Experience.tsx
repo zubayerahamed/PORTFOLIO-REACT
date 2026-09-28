@@ -17,7 +17,7 @@ export default function Experience() {
     });
 
   return (
-    <section id="experience" className="section bg-white">
+    <section id="experience" className="section bg-surface">
       <div className="page grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-4">
           <div className="text-center lg:sticky lg:top-28 lg:text-left">
@@ -39,21 +39,21 @@ export default function Experience() {
                 <span
                   aria-hidden
                   className={`absolute left-0 top-2 flex h-[15px] w-[15px] items-center justify-center rounded-full border-2 ${
-                    isCurrent ? 'border-amber bg-amber/20' : 'border-ink/25 bg-white'
+                    isCurrent ? 'border-amber bg-amber/20' : 'border-fg/25 bg-surface'
                   }`}
                 >
                   {isCurrent && <span className="h-[5px] w-[5px] animate-pulse rounded-full bg-amber" />}
                 </span>
 
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
-                  <span className="font-medium tabular-nums text-ink">
+                  <span className="font-medium tabular-nums text-fg">
                     {formatMonth(role.start)} to {isCurrent ? 'present' : formatMonth(role.end!)}
                   </span>
-                  <span className="rounded-full bg-paper px-2.5 py-0.5 text-xs font-semibold tabular-nums text-ink-600">
+                  <span className="rounded-full bg-paper px-2.5 py-0.5 text-xs font-semibold tabular-nums text-fg-2">
                     {formatDuration(monthsBetween(role.start, role.end))}
                   </span>
                   {isCurrent && (
-                    <span className="rounded-full bg-amber/20 px-2.5 py-0.5 text-xs font-semibold text-[#8A5A00]">
+                    <span className="rounded-full bg-amber/20 px-2.5 py-0.5 text-xs font-semibold text-[#8A5A00] dark:text-amber">
                       Current role
                     </span>
                   )}
@@ -61,7 +61,7 @@ export default function Experience() {
 
                 <h3 className="mt-3 text-2xl font-bold leading-tight sm:text-[1.7rem]">{role.position}</h3>
                 <p className="mt-1 flex flex-wrap items-center gap-x-3 text-[17px]">
-                  <span className="font-semibold text-spring">{role.company}</span>
+                  <span className="font-semibold text-accent">{role.company}</span>
                   <span className="inline-flex items-center gap-1 text-sm text-muted">
                     <MapPin className="h-3.5 w-3.5" />
                     {role.location}
@@ -82,12 +82,12 @@ export default function Experience() {
                   </ol>
                 )}
 
-                {role.summary && <p className="mt-4 max-w-[65ch] leading-relaxed text-ink-600">{role.summary}</p>}
+                {role.summary && <p className="mt-4 max-w-[65ch] leading-relaxed text-fg-2">{role.summary}</p>}
 
                 {isOpen && (
                   <ul className="mt-4 max-w-[65ch] space-y-2.5">
                     {role.highlights.map((h) => (
-                      <li key={h} className="relative pl-5 leading-relaxed text-ink-600">
+                      <li key={h} className="relative pl-5 leading-relaxed text-fg-2">
                         <span aria-hidden className="absolute left-0 top-[0.7em] h-1.5 w-1.5 rounded-full bg-spring" />
                         {h}
                       </li>
@@ -98,7 +98,7 @@ export default function Experience() {
                 <button
                   onClick={() => toggle(i)}
                   aria-expanded={isOpen}
-                  className="mt-3 inline-flex min-h-[40px] items-center gap-1.5 text-sm font-semibold text-ink hover:text-spring"
+                  className="mt-3 inline-flex min-h-[40px] items-center gap-1.5 text-sm font-semibold text-fg hover:text-accent"
                 >
                   {isOpen ? 'Hide highlights' : `Show ${role.highlights.length} highlights`}
                   <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />

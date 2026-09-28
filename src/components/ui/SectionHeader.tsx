@@ -12,7 +12,7 @@ export default function SectionHeader({ title, intro, dark, children }: Props) {
     <div className="mb-10 grid grid-cols-1 gap-5 text-center sm:mb-14 lg:text-left lg:grid-cols-12 lg:items-end lg:gap-10">
       <h2
         className={`text-[2.25rem] font-extrabold leading-[1.02] sm:text-5xl lg:col-span-6 lg:text-[3.5rem] ${
-          dark ? 'text-white' : 'text-ink'
+          dark ? 'text-white' : 'text-fg'
         }`}
       >
         {title}
